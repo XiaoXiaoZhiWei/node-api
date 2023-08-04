@@ -114,5 +114,51 @@ app.listen(port, () => {
 })
 ```
 
+# 04-添加路由
 
+路由: 映射关系。请求路径 -- 处理函数之间映射关系。
+
+## 1 安装koa-router
+
+```
+npm i koa-router
+```
+
+步骤:
+
+1. 导入包
+2. 实例化对象
+3. 编写路由
+4. 注册中间件
+
+##  2 编写路由
+
+创建`src/router`目录, 编写`userRoute.js`
+
+```js
+const Router = require("koa-router")
+const router = new Router()
+
+router.get('/', (ctx, next) => {
+    ctx.body = 'Hello world !'
+})
+
+module.exports = router
+```
+
+## 3 改写main.js
+
+```js
+const Koa = require("koa")
+const userRouter = require("./router/userRouter")
+const config = require("../config/default")
+const app = new Koa()
+
+app.use(userRouter.routes())
+
+const port = config.APP_PORT
+app.listen(port, () => {
+    console.log(`server is running on http://localhost:${port}`);
+})
+```
 
