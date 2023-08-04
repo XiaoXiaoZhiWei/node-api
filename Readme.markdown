@@ -52,21 +52,67 @@ app.listen(port, () => {
 
 # 03-项目的基本优化
 
+## 1 自动重启服务
 
+`npm i nodemon -D` 
 
+nodemon ：判断文件是否更改，然后重启服务器，避免重复关闭重启。类似热更新。
 
+编写`package.json`脚本
 
+```json
+"scripts": {
+  "dev": "nodemon ./src/main.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+```
 
+执行`npm run dev`启动服务
 
+## 2 读取配置文件
 
+dotenv作用：把.env文件中的键值对注入到process.env的对象中。(读取根目录中的`.env`文件, 将配置写`process.env`中)
 
+1 安装`dotenv`
 
+```
+npm i dotenv
+```
 
+2 创建`.env`文件
 
+```
+APP_PORT=8000
+```
 
+3 创建`src/config/default.js`
 
+```js
+const dotenv = require('dotenv')
 
+dotenv.config()
 
+// console.log(process.env.APP_PORT)
+
+module.exports = process.env
+```
+
+4 改写`main.js`
+
+```js 
+const Koa = require("koa")
+const config = require("../config/default")
+const app = new Koa()
+
+app.use((ctx, next) => {
+    ctx.body = 'Hello world'
+})
+
+const port = config.APP_PORT
+app.listen(port, () => {
+    console.log(`server is running on http://localhost:${port}`);
+})
+```
 
 
 
