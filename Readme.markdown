@@ -162,3 +162,70 @@ app.listen(port, () => {
 })
 ```
 
+# 05-目录结构优化
+
+## 1 将http服务和app业务拆分
+
+创建`src/app/index.js`
+
+```js
+const Koa = require("koa")
+const userRouter = require("../router/userRouter")
+const app = new Koa()
+
+app.use(userRouter.routes())
+
+module.exports = app
+```
+
+改写`main.js`
+
+```js
+const app = require("./app/index")
+const config = require("../config/default")
+
+const port = config.APP_PORT
+app.listen(port, () => {
+    console.log(`server is running on http://localhost:${port}`);
+})
+
+```
+
+## 2 将路由和控制器拆分
+
+路由: 解析URL, 对应的方法把这块拆分到控制器。
+
+控制器: 处理不同的业务
+
+1、 在controller文件夹下新建`UserController`
+
+```js
+class UserController {
+    async register(ctx, next) {
+        ctx.body = "注册成功"
+    }
+}
+
+module.exports = new UserController()
+```
+
+2、导入controller获取注册函数，建立url和hanlder之间关系。
+
+```js
+const Router = require("koa-router")
+const {register} = require("../controller/userController")
+
+const router = new Router({ prefix: '/users' })
+
+// 注册接口
+router.post('/register', register)
+
+module.exports = router
+```
+
+
+
+
+
+
+
