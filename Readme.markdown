@@ -331,3 +331,42 @@ sequelize.authenticate()
 })
 ```
 
+# 08-创建User模型
+
+## 1 拆分Model层
+
+sequelize主要通过Model同步进行创建对应数据表
+
+```js
+const { DataTypes } = require('sequelize');
+const seq = require("../db/seq")
+
+// seq.define会返回模型
+const User = seq.define('User', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        comment: "用户名"
+    },
+    password: {
+        type: DataTypes.CHAR(64),
+        allowNull: false,
+        comment: "密码"
+    },
+    isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: 0,
+        comment: "是否为管理员, 0: 不是管理员(默认); 1: 是管理员"
+    }
+}, {
+  tableName: 'User'
+});
+
+User.sync();
+console.log("用户模型表刚刚(重新)创建！");
+
+module.exports = User
+```
+
