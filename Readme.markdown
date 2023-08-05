@@ -290,3 +290,44 @@ class UserController {
 module.exports = new UserController()
 ```
 
+# 07-数据库操作
+
+sequelize ORM数据库工具
+
+ORM: 对象关系映射,对象和sql概念之间进行映射。
+
+| 对象 | 数据表     |
+| ---- | ---------- |
+| 类   | 表名       |
+| 实例 | 一条条记录 |
+| 属性 | 表的字段名 |
+| 方法 | 操作       |
+
+## 1 安装sequelize
+
+`npm i sequelize`
+
+所选数据库安装驱动程序
+
+`npm i mysql2 # MySQL`
+
+## 2 连接数据库
+
+```js
+const sequelize = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
+    host: MYSQL_HOST,
+    dialect: 'mysql'
+});
+```
+
+## 3 测试连接情况
+
+```js
+sequelize.authenticate()
+.then(() => {
+    console.log('Connection has been established successfully.');
+}).catch((error) => {
+    console.error('Unable to connect to the database:', error);
+})
+```
+
