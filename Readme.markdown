@@ -223,9 +223,70 @@ router.post('/register', register)
 module.exports = router
 ```
 
+# 06- 解析body
 
+## 1 安装koa-body
 
+`npm install koa-body`
 
+## 2 注册中间件
 
+```js
+const { koaBody } = require('koa-body');
+const userRouter = require("../router/userRouter")
 
+const app = new Koa()
+
+app.use(koaBody());
+app.use(userRouter.routes())
+
+module.exports = app
+```
+
+## 3 解析请求数据
+
+```js
+ctx.request.body
+```
+
+## 4 拆分service层
+
+service层主要是做数据库处理
+
+在service文件夹下新建`userService`文件
+
+```js
+class UserService {
+    async createUser(userName, password) {
+        return "写入数据库成功"
+    }
+}
+
+module.exports = new UserService()
+```
+
+在controller层调用数据库方法
+
+```js
+const {createUser} = require("../service/userService")
+
+class UserController {
+    async register(ctx, next) {
+        //console.log(ctx.request.body);
+        // 1. 获取数据
+        const {username, password} = ctx.request.body
+        // 2. 操作数据库
+        const res = await createUser(username, password)
+        console.log(res)
+        // 3. 返回结果
+        ctx.body = {
+            code: 0,
+            message: "注册成功",
+            result: ctx.request.body
+        }
+    }
+}
+
+module.exports = new UserController()
+```
 
