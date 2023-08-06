@@ -1,3 +1,5 @@
+
+
 # 01-项目初始化
 
 ## 1 npm初始化 
@@ -416,3 +418,164 @@ class UserController {
 ```
 
 # 10-错误处理
+
+## 1 合法性
+
+```js
+// 合法性：用户名、密码不能为空
+if (!username || !password) {
+    console.error("用户名或密码为空", ctx.request.body);
+    ctx.status = 400
+    ctx.body = {
+        code: 10001,
+        message: "用户名或密码为空",
+        result:''
+    }
+    return
+}
+```
+
+## 2 合理性
+
+```js
+async getUserInfo({id, username, password, isAdmin}) {
+    const whereOpt = {}
+
+    id && Object.assign(whereOpt, { id })
+    username && Object.assign(whereOpt, { username })
+    password && Object.assign(whereOpt, { password })
+    isAdmin && Object.assign(whereOpt, { isAdmin })
+
+    const res = await UserModel.findOne({
+        attributes: ['id', 'username', 'password', 'isAdmin'],
+        where: whereOpt
+    })
+    return res.toJSON()
+}
+```
+
+```js
+// 合理性: 用户名不能重复
+const user = await getUserInfo({ username })
+if (user.username === username) {
+    ctx.status = 409
+    ctx.body = {
+        code: 10002,
+        message: "用户已经存在",
+        result:''
+    }
+    return
+}
+```
+
+# 11-拆分中间件
+
+为了使代码的逻辑更加清晰, 我们可以拆分一个中间件层, 封装多个中间件函数
+
+## 1 拆分中间件
+
+```js
+async function userValidator(ctx, next) {
+    const {username, password} = ctx.request.body
+    // 合法性：用户名、密码不能为空
+    if (!username || !password) {
+        console.error("用户名或密码为空", ctx.request.body);
+        ctx.status = 400
+        ctx.body = {
+            code: 10001,
+            message: "用户名或密码为空",
+            result:''
+        }
+        return
+    }
+
+    await next()
+}
+```
+
+路由添加具体中间件
+
+```js
+const Router = require("koa-router")
+const {register} = require("../controller/userController")
+const {userValidator, verifyUser} = require("../middleware/userMiddleware")
+
+const router = new Router({ prefix: '/users' })
+
+// 注册接口
+router.post('/register', userValidator, verifyUser, register)
+
+module.exports = router
+```
+
+## 2 统一错误处理
+
+- 在出错的地方使用`ctx.app.emit`提交错误
+- 在app中通过`app.on`监听
+
+编写统一的错误定义文件
+
+```js
+module.exports = {
+    userFormatError: {
+        code: 10001,
+        message: "用户名或密码为空",
+        result: ''
+    },
+    userAlreadyExited: {
+        code: 10002,
+        message: "用户已经存在",
+        result: ''
+    }
+}
+```
+
+发送错误
+
+```js
+async function userValidator(ctx, next) {
+    const {username, password} = ctx.request.body
+    // 合法性：用户名、密码不能为空
+    if (!username || !password) {
+        console.error("用户名或密码为空", ctx.request.body);
+        ctx.app.emit('error', userFormatError, ctx)
+        return
+    }
+
+    await next()
+}
+```
+
+监听错误并处理
+
+```js
+app.on('error', errHandle)
+```
+
+新建错误处理函数
+
+```js
+function errHandle(err, ctx) {
+    var status = 500
+        switch (err.code) {
+            case 10001:
+                status = 400
+                break;
+            case 10002:
+                status = 409
+                break;
+            default:
+                status = 500
+                break;
+        }
+        ctx.status = status
+        ctx.body = err
+}
+
+module.exports = {
+    errHandle
+}
+```
+
+
+
