@@ -7,12 +7,14 @@ class UserController {
         const {username, password} = ctx.request.body
         // 2. 操作数据库
         const res = await createUser(username, password)
-        console.log(res)
         // 3. 返回结果
         ctx.body = {
             code: 0,
             message: "注册成功",
-            result: ctx.request.body
+            result: {
+                id: res.id,
+                username: res.username
+            }
         }
     }
 }

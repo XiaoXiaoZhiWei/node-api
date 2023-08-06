@@ -1,6 +1,12 @@
+const UserModel = require("../model/userModel")
+
 class UserService {
     async createUser(userName, password) {
-        return "写入数据库成功"
+        const user = await UserModel.create({
+            username: userName,
+            password: password
+        })
+        return user.toJSON()
     }
 }
 

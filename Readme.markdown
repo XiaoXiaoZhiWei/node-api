@@ -342,6 +342,7 @@ const { DataTypes } = require('sequelize');
 const seq = require("../db/seq")
 
 // seq.define会返回模型
+// id 会被sequelize自动创建, 管理
 const User = seq.define('User', {
     username: {
         type: DataTypes.STRING,
@@ -368,5 +369,49 @@ User.sync();
 console.log("用户模型表刚刚(重新)创建！");
 
 module.exports = User
+```
+
+# 09-添加用户入库
+
+所有数据库的操作都在Service层完成, Service调用Model完成数据库操作
+
+## 1 插入数据
+
+```js
+const user = await UserModel.create({
+            username: userName,
+            password: password
+        })
+```
+
+## 2 获取返回值
+
+返回是promise，并解析
+
+```js
+return user.toJSON()
+```
+
+## 3 返回结果给response
+
+```js
+class UserController {
+    async register(ctx, next) {
+        //console.log(ctx.request.body);
+        // 1. 获取数据
+        const {username, password} = ctx.request.body
+        // 2. 操作数据库
+        const res = await createUser(username, password)
+        // 3. 返回结果
+        ctx.body = {
+            code: 0,
+            message: "注册成功",
+            result: {
+                id: res.id,
+                username: res.username
+            }
+        }
+    }
+}
 ```
 
