@@ -8,6 +8,21 @@ class UserService {
         })
         return user.toJSON()
     }
+
+    async getUserInfo({id, username, password, isAdmin}) {
+        const whereOpt = {}
+
+        id && Object.assign(whereOpt, { id })
+        username && Object.assign(whereOpt, { username })
+        password && Object.assign(whereOpt, { password })
+        isAdmin && Object.assign(whereOpt, { isAdmin })
+
+        const res = await UserModel.findOne({
+            attributes: ['id', 'username', 'password', 'isAdmin'],
+            where: whereOpt
+        })
+        return res.toJSON()
+    }
 }
 
 module.exports = new UserService()
