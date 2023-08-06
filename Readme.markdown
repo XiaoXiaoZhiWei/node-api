@@ -577,5 +577,33 @@ module.exports = {
 }
 ```
 
+# 12-密码加密
 
+在将密码保存到数据库之前, 要对密码进行加密处理
+
+123123abc (加盐) 加盐加密
+
+## 1 安装bcryptjs
+
+`npm i bcryptjs `
+
+## 2 编写加密中间件
+
+```js
+async function crpytPassword(ctx, next) {
+    const {password} = ctx.request.body
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    ctx.request.body.password = hash
+
+    await next()
+}
+```
+
+##  3 在router中使用
+
+```js
+// 注册接口
+router.post('/register', userValidator, verifyUser, crpytPassword, register)
+```
 

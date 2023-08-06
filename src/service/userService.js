@@ -21,7 +21,8 @@ class UserService {
             attributes: ['id', 'username', 'password', 'isAdmin'],
             where: whereOpt
         })
-        return res.toJSON()
+        console.log(`res=${res}`);
+        return res ? res.toJSON() : null
     }
 }
 
