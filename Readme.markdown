@@ -634,6 +634,38 @@ await 返回的是一个promise对象。
   }
 ```
 
+# 13-验证登录
 
+流程: 
 
-# 13-登录验证
+- 验证格式
+- 验证用户是否存在
+- 验证密码是否匹配
+
+```js
+// 登录验证
+async function verifyLogin(ctx, next) {
+    const { username, password } = ctx.request.body
+    try {
+        // 1、验证用户是否存在
+        const user = await getUserInfo({ username })
+        if (!user) {
+            console.error(`登录用户不存在=${username}`);
+            ctx.app.emit('error', userDoesNotExist, ctx)
+            return
+        }
+        // 2. 密码是否匹配(不匹配: 报错)
+        if (!bcrypt.compareSync(password, user.password)) {
+            ctx.app.emit('error', invalidPassword, ctx)
+            return
+        }
+    } catch (error) {
+        console.error(`用户获取失败=${error}`);
+        ctx.app.emit('error', userLoginError, ctx)
+        return
+    }
+
+    await next()
+}
+```
+

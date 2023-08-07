@@ -24,4 +24,19 @@ module.exports = {
         message: '数据库用户对象获取错误',
         result: '',
     },
+    userDoesNotExist: {
+        code: 10006,
+        message: '用户不存在',
+        result: '',
+    },
+    userLoginError: {
+        code: 10007,
+        message: '用户登录失败',
+        result: '',
+    },
+    invalidPassword: {
+        code: 10008,
+        message: '密码不匹配',
+        result: '',
+    },
 }
