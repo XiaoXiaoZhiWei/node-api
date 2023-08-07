@@ -607,3 +607,33 @@ async function crpytPassword(ctx, next) {
 router.post('/register', userValidator, verifyUser, crpytPassword, register)
 ```
 
+# 12-1错误处理补充
+
+await 返回的是一个promise对象。
+
+需要处理错误。用`try catch`
+
+```js
+  async function verifyUser(ctx, next) {
+    const { username } = ctx.request.body
+    // 合理性: 用户名不能重复
+    try {
+        const user = await getUserInfo({ username })
+        if (user && user.username === username) {
+            console.error(`用户存在=${username}`);
+            ctx.app.emit('error', userAlreadyExited, ctx)
+            return
+        }
+    } catch (error) {
+        console.error(`用户获取失败=${error}`);
+        ctx.app.emit('error', getUserInfoError, ctx)
+        return
+    }
+
+    await next()
+  }
+```
+
+
+
+# 13-登录验证

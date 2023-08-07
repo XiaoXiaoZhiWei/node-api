@@ -1,3 +1,4 @@
+const MyError = require("../constant/myError")
 const UserModel = require("../model/userModel")
 
 class UserService {
@@ -6,7 +7,7 @@ class UserService {
             username: userName,
             password: password
         })
-        return user.toJSON()
+        return user ? user.toJSON() : null
     }
 
     async getUserInfo({id, username, password, isAdmin}) {

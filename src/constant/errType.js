@@ -10,8 +10,18 @@ module.exports = {
         result: ''
     },
     userRegisterError: {
-        code: '10003',
+        code: 10003,
         message: '用户注册错误',
         result: '',
-    }
+    },
+    createUserError: {
+        code: 10004,
+        message: '数据库用户对象创建错误',
+        result: '',
+    },
+    getUserInfoError: {
+        code: 10005,
+        message: '数据库用户对象获取错误',
+        result: '',
+    },
 }
