@@ -713,3 +713,50 @@ jwt: jsonwebtoken
 ```
 JWT_SECRET = czw_14.,+==3q
 ```
+
+## 2 用户认证
+
+### 1) 创建auth中间件
+
+```js
+const jwt = require("jsonwebtoken")
+const { JWT_SECRET } = require("../../config/default")
+const { tokenExpiredError, invalidToken } = require("../constant/errType")
+
+const auth = async (ctx, next) => {
+    const { authorization } = ctx.request.header
+    const token = authorization.replace('Bearer ', '')
+    console.log(token)
+    try {
+        const user = jwt.verify(token, JWT_SECRET);
+        ctx.state.user = user
+    } catch (err) {
+        // err
+        switch (err.name) {
+            case 'TokenExpiredError':
+                console.error('token已过期', err)
+                return ctx.app.emit('error', tokenExpiredError, ctx)
+            case 'JsonWebTokenError':
+                console.error('无效的token', err)
+                return ctx.app.emit('error', invalidToken, ctx)
+        }
+    }
+
+    await next()
+}
+
+module.exports = {
+    auth
+}
+```
+
+### 2) 改写router
+
+```js
+// 修改密码接口
+router.patch('/modifyPassword', auth, (ctx, next) => {
+    console.log(ctx.state.user)
+    ctx.body = '修改密码成功'
+})
+```
+

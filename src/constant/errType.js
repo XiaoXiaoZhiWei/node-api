@@ -39,4 +39,14 @@ module.exports = {
         message: '密码不匹配',
         result: '',
     },
+    tokenExpiredError: {
+        code: 10009,
+        message: '过期的token',
+        result: '',
+    },
+    invalidToken: {
+        code: 10010,
+        message: '无效的token',
+        result: '',
+    },
 }

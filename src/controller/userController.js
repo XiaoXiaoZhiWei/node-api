@@ -35,7 +35,7 @@ class UserController {
         const { username } = ctx.request.body
         try {
             const { password, ...res} = await getUserInfo({ username })
-            const token = jwt.sign(res, JWT_SECRET, { expiresIn: '2s'})
+            const token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d'})
             console.log("token=",token);
             ctx.body = {
                 code: 0,
