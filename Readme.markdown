@@ -822,3 +822,43 @@ async updateById(id, { username, password, isAdmin }) {
     }
 ```
 
+# 17-路由自动加载
+
+添加一个总路由入口，router文件下的其他路由加载到总路由上，通过脚本注入方式，避免每次新增路由都要修改。
+
+1、新建router/index.js
+
+```js
+const fs = require("node:fs")
+const path = require("node:path")
+const Router = require('koa-router')
+const router = new Router()
+
+const dirs = fs.readdirSync(__dirname)
+
+const routers = dirs.filter((value, index, array) => {
+    return value !== "index.js"
+})
+routers.forEach((value) => {
+    const fileName = path.resolve(__dirname,`./${value}`)
+    console.log("fileName=",fileName);
+    const businessRouter = require(fileName)
+    router.use(businessRouter.routes())
+})
+
+module.exports = router
+```
+
+2、导入总路由
+
+```js
+const router = require("../router/index")
+app.use(router.routes())
+```
+
+
+
+
+
+
+
