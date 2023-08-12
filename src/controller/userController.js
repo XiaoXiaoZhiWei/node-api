@@ -1,5 +1,9 @@
 const { createUser, getUserInfo, updateById } = require("../service/userService")
-const { createUserError, userLoginError, modifyPasswordError } = require("../constant/errType")
+const { 
+    createUserError, 
+    userLoginError, 
+    modifyPasswordError 
+} = require("../constant/errType")
 const jwt = require("jsonwebtoken")
 const { JWT_SECRET } = require("../../config/default")
 

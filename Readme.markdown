@@ -872,7 +872,52 @@ const hadAdminPermission = async (ctx, next) => {
 }
 ```
 
+# 19-商品图片上传
 
+方案：把文件传到upload文件夹下。
+
+使用**multipart/form-data**形式二进制流形式上传数据。
+
+需要配置静态路径和上传路径。
+
+```js
+app.use(
+    koaBody({
+        multipart: true,
+        formidable: {
+            // 在配制选项option里, 不推荐使用相对路径
+            // 在option里的相对路径, 不是相对的当前文件. 相对process.cwd()
+            uploadDir: path.join(__dirname, '../upload'),
+            keepExtensions: true,
+        },
+    })
+)
+app.use(koaStatic(path.resolve(__dirname, "../upload")))
+```
+
+2、根据文件名解析数据，获取上传路径并返回。
+
+```js
+class GoodsController {
+    async upload(ctx, next) {
+        const { file } = ctx.request.files
+        console.log('file=', file.newFilename);
+        console.log('path=', file.filepath);
+
+        if (file) {
+            ctx.body = {
+                code: 0,
+                message: '商品图片上传成功',
+                result: {
+                    goods_img: path.basename(file.filepath),
+                },
+            }
+        } else {
+            return ctx.app.emit('error', fileUploadError, ctx)
+        }
+    }
+}
+```
 
 
 
