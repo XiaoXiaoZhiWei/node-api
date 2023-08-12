@@ -856,7 +856,21 @@ const router = require("../router/index")
 app.use(router.routes())
 ```
 
+# 18-封装管理员权限
 
+从token获取用户信息中，判断isAdmin是否为真。从而判断管理员权限。
+
+```js
+const hadAdminPermission = async (ctx, next) => {
+    const { isAdmin } = ctx.state.user
+    console.log("isAdmin=",isAdmin);
+    if (!isAdmin) {
+        console.error('error', "没有管理员权限");
+        return ctx.emit('error', hasNotAdminPermission, ctx)
+    }
+    await next()
+}
+```
 
 
 

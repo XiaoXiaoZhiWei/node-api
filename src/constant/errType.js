@@ -55,8 +55,13 @@ module.exports = {
         result: '',
     },
     passwordFormatError: {
-        code: 10001,
+        code: 10012,
         message: "密码不合法",
+        result: ''
+    },
+    hasNotAdminPermission: {
+        code: 10013,
+        message: "没有管理员权限",
         result: ''
     },
 }
