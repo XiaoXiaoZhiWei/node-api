@@ -760,3 +760,14 @@ router.patch('/modifyPassword', auth, (ctx, next) => {
 })
 ```
 
+# 15-代码测试自动化
+
+1、登录接口成功之后添加脚本。获取token值放到环境变量里。
+
+![image-20230812155336602](/Users/cuizhiwei/Library/Application Support/typora-user-images/image-20230812155336602.png)
+
+2、在认证身份接口中，把token利用环境变量替换。达到自动设置目的。
+
+![image-20230812155447818](/Users/cuizhiwei/Library/Application Support/typora-user-images/image-20230812155447818.png)
+
+# 16-修改密码

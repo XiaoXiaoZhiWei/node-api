@@ -1,7 +1,8 @@
 const Router = require("koa-router")
-const { register, login } = require("../controller/userController")
+const { register, login, modifyPassword} = require("../controller/userController")
 const { 
     userValidator,
+    passwordValidator,
     verifyUser,
     crpytPassword,
     verifyLogin
@@ -15,8 +16,6 @@ router.post('/register', userValidator, verifyUser, crpytPassword, register)
 // 登录接口
 router.post('/login', userValidator, verifyLogin, login)
 // 修改密码接口
-router.patch('/modifyPassword', auth, (ctx, next) => {
-    console.log(ctx.state.user)
-    ctx.body = '修改密码成功'
-})
+router.patch('/modifyPassword', passwordValidator, auth, crpytPassword, modifyPassword)
+
 module.exports = router

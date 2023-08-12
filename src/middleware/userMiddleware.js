@@ -5,7 +5,8 @@ const {
     getUserInfoError, 
     userDoesNotExist, 
     userLoginError, 
-    invalidPassword
+    invalidPassword,
+    passwordFormatError
 } = require("../constant/errType")
 const bcrypt = require('bcryptjs');
 
@@ -15,6 +16,18 @@ async function userValidator(ctx, next) {
     if (!username || !password) {
         console.error("用户名或密码为空", ctx.request.body);
         ctx.app.emit('error', userFormatError, ctx)
+        return
+    }
+
+    await next()
+}
+
+async function passwordValidator(ctx, next) {
+    const { password } = ctx.request.body
+    // 合法性：用户名、密码不能为空
+    if (!password) {
+        console.error("密码不合法", ctx.request.body);
+        ctx.app.emit('error', passwordFormatError, ctx)
         return
     }
 
@@ -77,6 +90,7 @@ async function verifyLogin(ctx, next) {
 
 module.exports = {
     userValidator,
+    passwordValidator,
     verifyUser,
     crpytPassword,
     verifyLogin

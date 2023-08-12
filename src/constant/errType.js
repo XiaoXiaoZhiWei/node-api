@@ -49,4 +49,14 @@ module.exports = {
         message: '无效的token',
         result: '',
     },
+    modifyPasswordError: {
+        code: 10011,
+        message: '修改密码失败',
+        result: '',
+    },
+    passwordFormatError: {
+        code: 10001,
+        message: "密码不合法",
+        result: ''
+    },
 }
