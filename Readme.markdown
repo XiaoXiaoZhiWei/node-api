@@ -669,3 +669,47 @@ async function verifyLogin(ctx, next) {
 }
 ```
 
+# 14-用户的认证
+
+登录成功后, 给用户颁发一个令牌token, 用户在以后的每一次请求中携带这个令牌. 
+
+jwt: jsonwebtoken
+
+- header: 头部
+- payload: 载荷
+- signature: 签名
+
+## 1 颁发token
+
+### 1) 安装jsonwebtoken
+
+`npm i jsonwebtoken`
+
+### 2) 在控制器中改写login方法
+
+```js
+ async login(ctx, next) {
+        const { username } = ctx.request.body
+        try {
+            const { password, ...res} = await getUserInfo({ username })
+            const token = jwt.sign(res, JWT_SECRET, { expiresIn: '2s'})
+            console.log("token=",token);
+            ctx.body = {
+                code: 0,
+                message: "登录成功",
+                token: token
+            }
+        } catch (error) {
+            console.error('用户登录失败', error);
+            ctx.app.emit('error', userLoginError, ctx)
+        }
+    }
+```
+
+### 3) 定义私钥
+
+在`.env`定义
+
+```
+JWT_SECRET = czw_14.,+==3q
+```
