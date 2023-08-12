@@ -771,3 +771,54 @@ router.patch('/modifyPassword', auth, (ctx, next) => {
 ![image-20230812155447818](/Users/cuizhiwei/Library/Application Support/typora-user-images/image-20230812155447818.png)
 
 # 16-修改密码
+
+1、密码不能为空，先要认证，新密码需要重新加密。
+
+```js
+router.patch('/modifyPassword', passwordValidator, auth, crpytPassword, modifyPassword)
+```
+
+2、获取数据，并数据库更新对应用户数据。
+
+```js
+async modifyPassword(ctx, next) {
+        console.log(ctx.state.user)
+        // 1. 获取数据
+        const id = ctx.state.user.id
+        const password = ctx.request.body.password
+        // 2. 操作数据库
+        try {
+            const isSuccess = await updateById(id, { password })
+            if (!isSuccess) {
+                return ctx.emit('error', modifyPasswordError, ctx)
+            } 
+
+            ctx.body = {
+                code: 0,
+                message: "修改密码成功",
+                result: {
+
+                }
+            }
+        } catch (error) {
+            console.error('修改密码失败', error);
+            ctx.emit('error', modifyPasswordError, ctx)
+        }
+    }
+```
+
+```js
+async updateById(id, { username, password, isAdmin }) {
+        const whereOpt = { id }
+        const newUser = {}
+    
+        username && Object.assign(newUser, { username })
+        password && Object.assign(newUser, { password })
+        isAdmin && Object.assign(newUser, { isAdmin })
+    
+        const res = await UserModel.update(newUser, { where: whereOpt })
+        console.log('更新用户', res);
+        return res[0] > 0 ? true : false
+    }
+```
+
