@@ -919,5 +919,16 @@ class GoodsController {
 }
 ```
 
+# 20-商品图片上传类型判断
 
+```js
+const fileTypes = ['image/jpeg', 'image/png']
 
+if (file) {
+    if (!fileTypes.includes(file.mimetype)) {
+        return ctx.app.emit('error', unSupportedFileType, ctx)
+    }
+}
+```
+
+目前存在问题：即使验证错误，文件也已经上传。formidable参数配置，并把格式验证抽出来一个中间件。
