@@ -1034,7 +1034,50 @@ async publish(ctx, next) {
 }
 ```
 
+# 23-修改商品接口
 
+1、路由到controller先设计并跑通。
+
+```js
+// 修改商品
+router.put('/:id', auth, hadAdminPermission, modifyGoodsValidator, update)
+```
+
+```js
+async update(ctx, next) {
+    ctx.body = "更新商品成功"
+    const goodId = ctx.params.id
+    const goodsModel = ctx.request.body
+    try {
+        const res = await updateGoods(goodId, goodsModel)
+        if (res) {
+            ctx.body = {
+                code: 0,
+                message: "修改商品成功",
+                result: res
+            }
+        } else {
+            ctx.app.emit('error', updateGoodsError, ctx)
+        }
+    } catch (error) {
+        console.error("修改商品失败", error);
+        return ctx.app.emit('error', updateGoodsError, ctx)
+    }
+}
+```
+
+2、service里更新数据库里商品。
+
+```js
+ async updateGoods(id, goods) {
+    const res = await Goods.update(goods, {
+        where: {
+            id
+        }
+    });
+    return res[0] > 0 ? true : false
+}
+```
 
 
 

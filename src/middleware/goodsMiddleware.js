@@ -18,6 +18,25 @@ async function goodsValidator(ctx, next) {
     await next()
 }
 
+async function modifyGoodsValidator(ctx, next) {
+    try {
+        ctx.verifyParams({
+            name: { type: 'string', required: false },
+            price: { type: 'number', required: false },
+            num: { type: 'number', required: false },
+            imageUrl: { type: 'string', required: false }
+        });
+    } catch (error) {
+        console.error('校验商品参数失败', error);
+        goodsFormatError.result = error
+        ctx.app.emit('error', goodsFormatError, ctx)
+        return
+    }
+
+    await next()
+}
+
 module.exports = {
-    goodsValidator
+    goodsValidator,
+    modifyGoodsValidator
 }

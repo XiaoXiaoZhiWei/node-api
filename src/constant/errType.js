@@ -79,9 +79,14 @@ module.exports = {
         message: '商品参数格式错误',
         result: '',
     },
-    publishError: {
+    publishGoodsError: {
         code: '10204',
         message: '商品发布失败',
+        result: '',
+    },
+    updateGoodsError: {
+        code: '10205',
+        message: '商品修改失败',
         result: '',
     },
 }
