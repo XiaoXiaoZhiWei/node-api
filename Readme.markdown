@@ -963,3 +963,86 @@ module.exports = {
 }
 ```
 
+# 22-发布商品写入数据库
+
+## 1、商品模型--数据库建立
+
+```js
+const { DataTypes } = require('sequelize');
+const seq = require("../db/seq")
+
+// seq.define会返回模型
+const Goods = seq.define('Goods', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        comment: "商品名"
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        comment: "商品价格"
+    },
+    num: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: "商品库存"
+    },
+    imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        comment: "商品图像"
+    },
+}, {
+  tableName: 'Goods'
+});
+
+Goods.sync();
+console.log("商品模型表刚刚(重新)创建！");
+
+module.exports = Goods
+```
+
+## 2、service数据库保存
+
+```js
+async publishGoods(goods) {
+    const res = await Goods.create(goods)
+    return res.dataValues
+}
+```
+
+## 3、controller调用数据方法，并返回结果
+
+```js
+async publish(ctx, next) {
+    // 1、获取参数
+    // 2、写入数据库。（1、建表 2、插入数据方法）
+    try {
+        const { updatedAt, createdAt, ...res} = await publishGoods(ctx.request.body)
+        // 3、返回结果
+        ctx.body = {
+            code: 0,
+            message: "发布成功",
+            result: res
+        }
+    } catch (error) {
+        console.error("发布失败", error);
+        return ctx.app.emit('error', publishError, ctx)
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
