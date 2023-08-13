@@ -932,3 +932,34 @@ if (file) {
 ```
 
 目前存在问题：即使验证错误，文件也已经上传。formidable参数配置，并把格式验证抽出来一个中间件。
+
+# 21-统一参数格式校验
+
+就是请求参数校验利用中间件校验。
+
+`koa-parameter`
+
+```js
+async function goodsValidator(ctx, next) {
+    try {
+        ctx.verifyParams({
+            name: { type: 'string', required: true },
+            price: { type: 'number', required: true },
+            num: { type: 'number', required: true },
+            imageUrl: { type: 'string', required: true }
+        });
+    } catch (error) {
+        console.error('校验商品参数失败', error);
+        goodsFormatError.result = error
+        ctx.app.emit('error', goodsFormatError, ctx)
+        return
+    }
+
+    await next()
+}
+
+module.exports = {
+    goodsValidator
+}
+```
+

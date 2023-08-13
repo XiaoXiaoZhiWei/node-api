@@ -4,6 +4,7 @@ const router = require("../router/index")
 const errHandle = require("./errHandle")
 const koaStatic = require("koa-static")
 const path = require("node:path")
+const parameter = require('koa-parameter');
 
 const app = new Koa()
 
@@ -20,6 +21,7 @@ app.use(
 )
 app.use(koaStatic(path.resolve(__dirname, "../upload")))
 
+app.use(parameter(app));
 app.use(router.routes())
 
 app.on('error', errHandle)

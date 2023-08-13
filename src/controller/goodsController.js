@@ -23,6 +23,10 @@ class GoodsController {
             return ctx.app.emit('error', fileUploadError, ctx)
         }
     }
+
+    async publish(ctx, next) {
+        ctx.body = "发布成功"
+    }
 }
 
 module.exports = new GoodsController()
