@@ -1159,5 +1159,48 @@ async restoreGoods(id) {
 }
 ```
 
+# 27-商品列表接口
+
+查找数据条数和总集合
+
+```js
+async findAll(ctx, next) {
+    const { pageNum, pageSize} = ctx.request.body
+    try {
+        const res = await findAllGoods(pageNum, pageSize)
+        ctx.body = {
+            code: 0,
+            message: "商品列表获取成功",
+            result: res
+        } 
+    } catch (error) {
+        console.error("商品列表获取失败", error);
+        return ctx.app.emit('error', findGoodsListError, ctx)
+    }
+}
+```
+
+```js
+async findAllGoods(pageNum, pageSize) {
+    const offset = (pageNum - 1) * pageSize
+    const {count, rows} = await Goods.findAndCountAll({ offset: offset, limit: pageSize * 1 })
+    console.log('findAllGoods.res=', rows);
+    return {
+        pageNum,
+        pageSize,
+        total: count,
+        list: rows,
+    }
+}
+```
+
+注意：1、数据类型转换。2、offset计算公式。3、一般情况下会过滤软删除的数据。
+
+
+
+
+
+
+
 
 

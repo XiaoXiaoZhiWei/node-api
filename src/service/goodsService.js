@@ -36,6 +36,18 @@ class GoodsService {
         console.log('restoreGoods.res=', res);
         return res === 1 ? true : false
     }
+
+    async findAllGoods(pageNum, pageSize) {
+        const offset = (pageNum - 1) * pageSize
+        const {count, rows} = await Goods.findAndCountAll({ offset: offset, limit: pageSize * 1 })
+        console.log('findAllGoods.res=', rows);
+        return {
+            pageNum,
+            pageSize,
+            total: count,
+            list: rows,
+        }
+    }
 }
 
 module.exports = new GoodsService()

@@ -1,8 +1,8 @@
 const { fileUploadError, unSupportedFileType } = require("../constant/errType")
 const path = require("node:path")
 
-const { publishGoods, updateGoods, deleteGoods, restoreGoods } = require("../service/goodsService")
-const { publishGoodsError, updateGoodsError, deleteGoodsError, invalidGoodsID } = require("../constant/errType")
+const { publishGoods, updateGoods, deleteGoods, restoreGoods, findAllGoods } = require("../service/goodsService")
+const { publishGoodsError, updateGoodsError, deleteGoodsError, invalidGoodsID, findGoodsListError } = require("../constant/errType")
 
 class GoodsController {
     async upload(ctx, next) {
@@ -103,6 +103,21 @@ class GoodsController {
         } catch (error) {
             console.error("商品上架失败", error);
             return ctx.app.emit('error', deleteGoodsError, ctx)
+        }
+    }
+
+    async findAll(ctx, next) {
+        const { pageNum, pageSize} = ctx.request.body
+        try {
+            const res = await findAllGoods(pageNum, pageSize)
+            ctx.body = {
+                code: 0,
+                message: "商品列表获取成功",
+                result: res
+            } 
+        } catch (error) {
+            console.error("商品列表获取失败", error);
+            return ctx.app.emit('error', findGoodsListError, ctx)
         }
     }
 }

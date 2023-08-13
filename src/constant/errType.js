@@ -98,5 +98,10 @@ module.exports = {
         code: '10207',
         message: '无效的商品id',
         result: '',
+    },
+    findGoodsListError: {
+        code: '10208',
+        message: '商品列表获取失败',
+        result: '',
     }
 }

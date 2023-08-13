@@ -1,7 +1,7 @@
 const Router = require("koa-router")
-const { upload, publish, update, remove, restore } = require("../controller/goodsController")
+const { upload, publish, update, remove, restore, findAll } = require("../controller/goodsController")
 const { auth, hadAdminPermission } = require("../middleware/authMiddleware")
-const { goodsValidator, modifyGoodsValidator } = require("../middleware/goodsMiddleware")
+const { goodsValidator, modifyGoodsValidator, findGoodsValidator } = require("../middleware/goodsMiddleware")
 
 const router = new Router({ prefix: '/goods' })
 
@@ -17,5 +17,7 @@ router.delete('/:id', auth, hadAdminPermission, remove)
 router.post('/:id/off', auth, hadAdminPermission, remove)
 // 上架
 router.post('/:id/on', auth, hadAdminPermission, restore)
+// 商品列表
+router.post('/list', findGoodsValidator, findAll)
 
 module.exports = router
