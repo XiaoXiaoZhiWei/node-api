@@ -13,8 +13,18 @@ class GoodsService {
                 id
             }
         });
-        console.log('updateGoods.res=',res[0]);
+        console.log('updateGoods.res=', res[0]);
         return res[0] > 0 ? true : false
+    }
+
+    async deleteGoods(id) {
+        const res = await Goods.destroy({
+            where: {
+                id
+            }
+        });
+        console.log('updateGoods.res=', res);
+        return res === 1 ? true : false
     }
 }
 

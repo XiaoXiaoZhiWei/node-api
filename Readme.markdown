@@ -1079,9 +1079,21 @@ async update(ctx, next) {
 }
 ```
 
+# 24-硬删除接口
 
+生成项目中不推荐硬删除。通常通过一个isDelete状态来区别。
 
-
+```js
+async deleteGoods(id) {
+    const res = await Goods.destroy({
+        where: {
+            id
+        }
+    });
+    console.log('updateGoods.res=', res);
+    return res === 1 ? true : false
+}
+```
 
 
 

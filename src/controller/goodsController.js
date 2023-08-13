@@ -1,8 +1,8 @@
 const { fileUploadError, unSupportedFileType } = require("../constant/errType")
 const path = require("node:path")
 
-const { publishGoods, updateGoods } = require("../service/goodsService")
-const { publishGoodsError, updateGoodsError } = require("../constant/errType")
+const { publishGoods, updateGoods, deleteGoods } = require("../service/goodsService")
+const { publishGoodsError, updateGoodsError, deleteGoodsError } = require("../constant/errType")
 
 class GoodsController {
     async upload(ctx, next) {
@@ -45,7 +45,6 @@ class GoodsController {
     }
 
     async update(ctx, next) {
-        ctx.body = "更新商品成功"
         const goodId = ctx.params.id
         const goodsModel = ctx.request.body
         try {
@@ -62,6 +61,27 @@ class GoodsController {
         } catch (error) {
             console.error("修改商品失败", error);
             return ctx.app.emit('error', updateGoodsError, ctx)
+        }
+    }
+
+    async remove(ctx, next) {
+        const goodId = ctx.params.id
+        try {
+            const res = await deleteGoods(goodId)
+            if (res) {
+                ctx.body = {
+                    code: 0,
+                    message: "商品删除成功",
+                    result: {
+                        
+                    }
+                } 
+            } else {
+                return ctx.app.emit('error', deleteGoodsError, ctx)
+            }
+        } catch (error) {
+            console.error("商品删除失败", error);
+            return ctx.app.emit('error', deleteGoodsError, ctx)
         }
     }
 }
