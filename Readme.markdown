@@ -1095,9 +1095,69 @@ async deleteGoods(id) {
 }
 ```
 
+# 25-上下架商品
 
+就是软删除,增加一个字段deletedAt：删除时间,需要更新表
 
+```js
+// seq.define会返回模型
+const Goods = seq.define('Goods', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        comment: "商品名"
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        comment: "商品价格"
+    },
+    num: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: "商品库存"
+    },
+    imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        comment: "商品图像"
+    },
+}, {
+  tableName: 'Goods',
+  paranoid: true
+});
 
+//Goods.sync({ force: true });
+```
+
+如果下架，就更新该字段，不为空。
+
+```js
+async deleteGoods(id) {
+    const res = await Goods.destroy({
+        where: {
+            id
+        }
+    });
+    console.log('deleteGoods.res=', res);
+    return res === 1 ? true : false
+}
+```
+
+如果上架，该字段为空。
+
+```js
+async restoreGoods(id) {
+    const res = await Goods.restore({
+        where: {
+            id
+        }
+    });
+    console.log('restoreGoods.res=', res);
+    return res === 1 ? true : false
+}
+```
 
 
 

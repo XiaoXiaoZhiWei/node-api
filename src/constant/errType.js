@@ -91,7 +91,12 @@ module.exports = {
     },
     deleteGoodsError: {
         code: '10206',
-        message: '商品删除失败',
+        message: '商品下架失败',
         result: '',
     },
+    invalidGoodsID: {
+        code: '10207',
+        message: '无效的商品id',
+        result: '',
+    }
 }

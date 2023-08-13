@@ -25,9 +25,11 @@ const Goods = seq.define('Goods', {
         comment: "商品图像"
     },
 }, {
-  tableName: 'Goods'
+  tableName: 'Goods',
+  paranoid: true
 });
 
+//Goods.sync({ force: true });
 Goods.sync();
 console.log("商品模型表刚刚(重新)创建！");
 

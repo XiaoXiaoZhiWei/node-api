@@ -23,7 +23,17 @@ class GoodsService {
                 id
             }
         });
-        console.log('updateGoods.res=', res);
+        console.log('deleteGoods.res=', res);
+        return res === 1 ? true : false
+    }
+
+    async restoreGoods(id) {
+        const res = await Goods.restore({
+            where: {
+                id
+            }
+        });
+        console.log('restoreGoods.res=', res);
         return res === 1 ? true : false
     }
 }
