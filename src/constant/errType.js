@@ -103,5 +103,10 @@ module.exports = {
         code: '10208',
         message: '商品列表获取失败',
         result: '',
+    },
+    addCartFormatError: {
+        code: '10209',
+        message: '校验商品参数失败',
+        result: '',
     }
 }
