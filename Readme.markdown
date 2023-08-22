@@ -1196,6 +1196,12 @@ async findAllGoods(pageNum, pageSize) {
 
 注意：1、数据类型转换。2、offset计算公式。3、一般情况下会过滤软删除的数据。
 
+# 开发环境和生产环境配置
+
+主要根据process.env.NODE_ENV 去判断。
+
+通过在启动时候添加环境变量配置去设置。
+
 # 28-添加到购物车(上)-准备工作
 
 
