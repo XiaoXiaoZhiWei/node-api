@@ -1,5 +1,5 @@
 module.exports = {
-    "APP_PORT": 9000,
+    "APP_PORT": 3000,
 
     "MYSQL_HOST": "118.31.39.39",
     "MYSQL_PORT": 3306,
